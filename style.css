@@ -18,5 +18,16 @@ body {
 }
 
 .next-red {
+	background-color:rgb(230, 42, 98);
+}
+
+.next-black{
+	background-color:rgb(47, 22, 23);
+}
+.col.red {
 	background-color:red;
+}
+
+.col.black {
+	background-color:black;
 }
