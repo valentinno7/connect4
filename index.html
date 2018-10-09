@@ -6,8 +6,16 @@
     <script src="connect4.js"></script>
     <script src="main.js"></script>
   </head>
-	<body>
-		<div id="connect4"></div>
-	</body>
-	
+
+  <body>
+    <h4>It's <span id="player">red</span>'s turn!</h4>
+    <div id="connect4"></div>
+    <br>
+    <button id="restart">Restart</button>
+	<form>
+		<input name="rows" id="rows" placeholder="Rows" type="number">
+		<input name="columns" id="columns" placeholder="Columns" type="number">
+		<button id="submit">Submit</button>
+	</form>
+  </body>
 </html>

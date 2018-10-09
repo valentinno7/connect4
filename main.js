@@ -1,5 +1,11 @@
 $(document).ready(function() {
-  const connect4 = new Connect4('#connect4')
+  const connect4 = new Connect4('#connect4', 7, 8);
+
+  connect4.onPlayerMove = function() {
+    $('#player').text(connect4.player);
+  }
   
-  console.log("Test");
+  $('#restart').click(function() {
+    connect4.restart();
+  })
 });
