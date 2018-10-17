@@ -1,21 +1,23 @@
 class Connect4 {
-  constructor(selector, rows, columns) {
-	console.log(rows, columns); 
+  constructor(selector, rows, columns, player1, player2, whostart) {
     this.ROWS = rows;
     this.COLS = columns;
-    this.player = 'red';
+    this.player1 = player1;
+	this.player2=player2;
+	console.log('test', this.player1, this.player2);
     this.selector = selector;
     this.isGameOver = false;
     this.onPlayerMove = function() {};
-    this.createGrid();
-    this.setupEventListeners();
+    this.createGrid(this.player1);
+    this.setupEventListeners(this.player1, this.player2);
   }
 
-  createGrid() {
+  createGrid(player1) {
     const $board = $(this.selector);
     $board.empty();
     this.isGameOver = false;
-    this.player = 'red';
+    this.player = player1;
+	console.log('test', this.player);
     for (let row = 0; row < this.ROWS; row++) {
       const $row = $('<div>')
         .addClass('row');
@@ -30,7 +32,7 @@ class Connect4 {
     }
   }
 
-  setupEventListeners() {
+  setupEventListeners(player1, player2) {
     const $board = $(this.selector);
     const that = this;
 

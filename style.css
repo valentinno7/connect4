@@ -1,6 +1,7 @@
 body {
 	text-align:center;
-	
+	margin:0;
+	padding:0;
 }
 
 .top{
@@ -20,6 +21,7 @@ body {
 #connect4 {
 	background-color: yellow;
 	dipslay: inline-block;
+	margin-top:300px;
 }
 
 .col {
@@ -49,7 +51,9 @@ body {
 .col.black {
 	background-color:black;
 }
-
+.menu {
+	overflow: hidden;
+}
 .menu ul {
     list-style-type: none;
     margin: 0;
@@ -70,6 +74,10 @@ body {
     text-decoration: none;
 }
 
+.meniu-right {
+  float: right;
+}
+
 .top {
 	background-color:#333;
 }
@@ -80,8 +88,33 @@ body {
 	float:left;
 }
 
+
 #instructions {
 	background-color:#00A4A4;
-	margin-top:0;
-	margin-bottom:0;
+	display:block;
+	float:left;
 }
+#cointainer {
+	display: table;
+	float:left;
+	width:100%;
+	min-height:300px;
+}
+#ratings {
+	background-color:#f0f8ff;
+	float:left;
+	width:50%;
+	min-height:200px;
+}
+
+#configuration {
+	background-color:8b8878;
+	float:left;
+	width:50%;
+	min-height:200px; 	
+}
+
+.table-cell {
+	display:table-cell;
+}
+

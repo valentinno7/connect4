@@ -17,28 +17,52 @@
   		<ul>
 			<li><a href="#">Home</a></li>
 			<li><a href="#instructions">Instructions</a></li>
-  			<li><a href="#">Configuration</a></li>
-  			<li><a href="#">Play!</a></li>
-  			<li><a href="#">Ratings</a>
-  			<li>
+  			<li><a href="#configuration">Configuration</a></li>
+  			<li id="play"><a href="#connect4">Play!</a></li>
+  			<li><a href="#ratings">Ratings</a>
+			<div class="meniu-right">
+				<li><a href="#">Sign up</a>
+				<li><a href="#">Sign in</a>
+			</div>
 		</ul>
 	</div>
+	<div id="overlay">
 	<div id="instructions">
-		<h3>Instructions</h3>
-		<p><strong>Connect Four </strong>(also known as Captain's Mistress, Four Up, Plot Four, Find Four, Four in a Row, Four in a Line and Gravitrips (in Soviet Union)) is a two-player connection game in which the players first choose a color and then take turns dropping one colored disc from the top into a seven-column, six-row vertically suspended grid. 
+			<h3>Instructions</h3>
+			<p><strong>Connect Four </strong>(also known as Captain's Mistress, Four Up, Plot Four, Find Four, Four in a Row, Four in a Line and Gravitrips (in Soviet Union)) is a two-player connection game in which the players first choose a color and then take turns dropping one colored disc from the top into a seven-column, six-row vertically suspended grid. 
 		The pieces fall straight down, occupying the lowest available space within the column. 
 		The objective of the game is to be the first to form a horizontal, vertical, or diagonal line of four of one's own discs. 
 		Connect Four is a solved game. The first player can always win by playing the right moves.
-		</p>
+			</p>
+		</div>
+		<div id="container">
+			<div id="ratings" class="table-cell">
+				<h3>Ratings</h3>
+				<p><strong>Top players:</strong></p>
+			</div>
+		
+			<div id="configuration" class="table-cell">
+				<h3>Configuration</h3>
+				<form>
+					<div class="row_column">
+						<input name="row" id="rows" placeholder="Rows" type="number">
+						<input name="column" id="columns" placeholder="Columns" type="number">
+					</div>
+					<div class="names">
+						<input name="player1" id="player1_name" placeholder="Players 1 name" type="text" value="P1">
+						<input name="player2" id="player2_name" placeholder="Players 2 name" type="text" value="P2">
+					</div>
+					<button id="submit">Submit</button>
+				</form>
+				<br>
+				<button id="restart">Restart</button>
+			</div>
 	</div>
-    <h4>It's <span id="player">red</span>'s turn!</h4>
-    <div id="connect4"></div>
-    <br>
-    <button id="restart">Restart</button>
-	<form>
-		<input name="row" id="rows" placeholder="Rows" type="number">
-		<input name="column" id="columns" placeholder="Columns" type="number">
-		<button id="submit">Submit</button>
-	</form>
+	</div>
+    <div id="connect4">
+	<!--<h4>It's <span id="player">red</span>'s turn!</h4>-->
+	</div>
+		<br>
+		
   </body>
 </html>
