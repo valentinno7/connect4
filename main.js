@@ -1,7 +1,8 @@
 $(document).ready(function() {
 	$('#submit').click(function(event) {
 		const connect4=new Connect4('#connect4', document.getElementById('rows').value, document.getElementById('columns').value, 
-									document.getElementById('player1_name').value, document.getElementById('player2_name').value);
+									document.getElementById('player1_name').value, document.getElementById('player2_name').value,
+									document.getElementById('firstToStart').value);
 
 		event.preventDefault();
 		var btn = document.getElementById('submit');

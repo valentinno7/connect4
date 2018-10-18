@@ -2,11 +2,14 @@ class Connect4 {
   constructor(selector, rows, columns, player1, player2, whostart) {
     this.ROWS = rows;
     this.COLS = columns;
-    this.playername= player1;
-	//this.playername2=player2;
-	this.player='red';
-	//console.log('test', this.player, this.player2);
-	//console.log(typeof player1);
+	if(whostart==1) {
+		this.playername= player1;
+		this.player='red';
+	}
+	else if(whostart==2) {
+		this.playername= player2;
+		this.player='black';
+	}
     this.selector = selector;
     this.isGameOver = false;
     this.onPlayerMove = function() {};
@@ -15,7 +18,7 @@ class Connect4 {
   }
 
   createGrid(player1) {
-    const $board = $(this.selector);
+    const $board = $(this.selector);	
     $board.empty();
 	//this.player=player1;
     this.isGameOver = false;
