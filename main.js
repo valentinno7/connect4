@@ -4,10 +4,17 @@ $(document).ready(function() {
 									document.getElementById('player1_name').value, document.getElementById('player2_name').value,
 									document.getElementById('firstToStart').value);
 
-		event.preventDefault();
+		
 		var btn = document.getElementById('submit');
-		if (btn.value=="Submit") 
+		if (btn.innerHTML=="Submit") {		
 			btn.innerHTML = "Restart";
+		}
+		else if(btn.innerHTML=="Restart") {
+			connect4.restart(document.getElementById('rows').value, document.getElementById('columns').value, 
+									document.getElementById('player1_name').value, document.getElementById('player2_name').value,
+									document.getElementById('firstToStart').value);
+		}
+		event.preventDefault();
 	})
   connect4.onPlayerMove = function() {
     $('#player').text(connect4.player);

@@ -20,9 +20,7 @@ class Connect4 {
   createGrid(player1) {
     const $board = $(this.selector);	
     $board.empty();
-	//this.player=player1;
     this.isGameOver = false;
-	//console.log('test', this.player);
     for (let row = 0; row < this.ROWS; row++) {
       const $row = $('<div>')
         .addClass('row');
@@ -81,19 +79,13 @@ class Connect4 {
         $('.col.empty').removeClass('empty');
         return;
       }
-	  console.log('test', that.player, that.player2);
-      //that.player = (that.player === String(that.player)) ? String(that.player2) : String(that.player);
 	  if(String(that.playername)===player1) {
 		 that.player='black';
 		 that.playername=player2;
-		 console.log('test1',player1, player2, that.player);
-		 console.log(typeof that.player, 'tipas');
 	  }
-	 else { 
-		 
+	 else { 		 
 		 that.player='red';
 		 that.playername=player1;
-		 console.log('test2', player1, that.player);
 	 }
       that.onPlayerMove();
       $(this).trigger('mouseenter');
@@ -159,8 +151,9 @@ class Connect4 {
       checkDiagonalTLtoBR();
   }
 
-  restart () {
-    this.createGrid();
-    this.onPlayerMove();
+  restart (rows, columns, player1, player2, whostart) {
+	var connect4=new Connect4('#connect4', rows, columns, player1, player2, whostart);
+	//this.onPlayerMove();
+
   }
 }
