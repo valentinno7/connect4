@@ -10,7 +10,7 @@
   <body>
   <div class="top">
   	<header>
-  	<img src="http://www.giantpartygames.co.uk/wp-content/uploads/2014/09/Connect-4-Header.png" alt="logo"
+  	<img src="http://www.giantpartygames.co.uk/wp-content/uploads/2014/09/Connect-4-Header.png" alt="logo">
   	</header>
   </div>
   	<div class="menu">
@@ -20,13 +20,23 @@
   			<li><a href="#configuration">Configuration</a></li>
   			<li id="play"><a href="#connect4">Play!</a></li>
   			<li><a href="#ratings">Ratings</a>
-			<div class="meniu-right">
-				<li><a href="#">Sign up</a>
-				<li><a href="#">Sign in</a>
-			</div>
+			<li><button onclick="on()">Sign up|Sing in</button></li>
 		</ul>
 	</div>
 	<div id="overlay">
+	<button id="closebtn" onclick="off()">Close</button>
+		<form>
+			<div id="loginform">
+				<h6>Sign in!</h6>
+				<input name="login" id="login" placeholder="Username" type="text">
+				<input name="password" class="pass" placeholder="Password" type="password">
+				<br>
+				<button id="signinbutton" onclick="signIn()">Sign in</button>
+				<button id="regbutton" onclick="off()">Sign up</button>
+			</div>
+		</form>
+	</div>
+
 	<div id="instructions">
 			<h3>Instructions</h3>
 			<p><strong>Connect Four </strong>(also known as Captain's Mistress, Four Up, Plot Four, Find Four, Four in a Row, Four in a Line and Gravitrips (in Soviet Union)) is a two-player connection game in which the players first choose a color and then take turns dropping one colored disc from the top into a seven-column, six-row vertically suspended grid. 
@@ -45,11 +55,11 @@
 				<h3>Configuration</h3>
 				<form>
 					<div class="row_column">
-						<input name="row" id="rows" placeholder="Rows" type="number">
-						<input name="column" id="columns" placeholder="Columns" type="number">
+						<input name="row" id="rows" placeholder="Rows" type="number" value=8>
+						<input name="column" id="columns" placeholder="Columns" type="number" value=8>
 					</div>
 					<div class="names">
-						<input name="player1" id="player1_name" placeholder="Players 1 name" type="text" value="P1">
+						<input name="player1" id="player1_name" placeholder="Players 1 name" type="text" value="Guest">
 						<input name="player2" id="player2_name" placeholder="Players 2 name" type="text" value="P2">
 					</div>
 					<div class="starts">
@@ -64,7 +74,7 @@
 				<button id="restart">Restart</button>
 			</div>
 	</div>
-	</div>
+	
     <div id="connect4">
 	<!--<h4>It's <span id="player">red</span>'s turn!</h4>-->
 	</div>

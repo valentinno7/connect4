@@ -1,119 +1,137 @@
 class Connect4 {
-  constructor(selector, rows, columns, player1, player2, whostart) {
-    this.ROWS = rows;
-    this.COLS = columns;
-	if(whostart==1) {
-		this.playername= player1;
-		this.player='red';
-	}
-	else if(whostart==2) {
-		this.playername= player2;
-		this.player='black';
-	}
-    this.selector = selector;
-    this.isGameOver = false;
-    this.onPlayerMove = function() {};
-    this.createGrid(this.playername);
-    this.setupEventListeners(player1, player2);
-  }
-
-  createGrid(player1) {
-    const $board = $(this.selector);	
-    $board.empty();
-    this.isGameOver = false;
-    for (let row = 0; row < this.ROWS; row++) {
-      const $row = $('<div>')
-        .addClass('row');
-      for (let col = 0; col < this.COLS; col++) {
-        const $col = $('<div>')
-          .addClass('col empty')
-          .attr('data-col', col)
-          .attr('data-row', row);
-        $row.append($col);
-      }
-      $board.append($row);
-    }
-  }
-
-  setupEventListeners(player1, player2) {
-    const $board = $(this.selector);
-    const that = this;
-	console.log('test', that.player);
-    function findLastEmptyCell(col) {
-      const cells = $(`.col[data-col='${col}']`);
-      for (let i = cells.length - 1; i >= 0; i--) {
-        const $cell = $(cells[i]);
-        if ($cell.hasClass('empty')) {
-          return $cell;
+    constructor (selector, rows, columns, player1, player2, whostart) {
+        this.ROWS = rows;
+        this.COLS = columns;
+        if(whostart==1) {
+            this.playername= player1;
+            this.player='red';
         }
-      }
-      return null;
+        else if(whostart==2) {
+            this.playername= player2;
+            this.player='black';
+        }
+        this.selector = document.querySelector("#connect4");
+        this.isGameOver = false;
+        this.onPlayerMove = function() {};
+        this.createGrid(this.selector, this.playername);
+        this.setupEventListeners(this.selector);
     }
-
-    $board.on('mouseenter', '.col.empty', function() {
-      if (that.isGameOver) return;
-      const col = $(this).data('col');
-      const $lastEmptyCell = findLastEmptyCell(col);
-      $lastEmptyCell.addClass(`next-${that.player}`);
-    });
-
-    $board.on('mouseleave', '.col', function() {
-      $('.col').removeClass(`next-${that.player}`);
-    });
-
-    $board.on('click', '.col.empty', function() {
-      if (that.isGameOver) return;
-      const col = $(this).data('col');
-      const $lastEmptyCell = findLastEmptyCell(col);
-      $lastEmptyCell.removeClass(`empty next-${that.player}`);
-      $lastEmptyCell.addClass(that.player);
-      $lastEmptyCell.data('player', that.player);
-
-      const winner = that.checkForWinner(
-        $lastEmptyCell.data('row'), 
-        $lastEmptyCell.data('col')
-      )
-      if (winner) {
-        that.isGameOver = true;
-        alert(`Game Over! Player ${that.playername} has won!`);
-        $('.col.empty').removeClass('empty');
-        return;
-      }
-	  if(String(that.playername)===player1) {
-		 that.player='black';
-		 that.playername=player2;
-	  }
-	 else { 		 
-		 that.player='red';
-		 that.playername=player1;
-	 }
-      that.onPlayerMove();
-      $(this).trigger('mouseenter');
-    });
-  }
-
-  checkForWinner(row, col) {
-    const that = this;
-
-    function $getCell(i, j) {
-      return $(`.col[data-row='${i}'][data-col='${j}']`);
+ 
+    createGrid(selector, player1) {
+        const board = selector;
+        this.isGameOver = false;
+        for (let row = 0; row < this.ROWS; row++) {
+            const const_row=document.createElement("div");
+            const_row.classList.add("row");
+        for (let col = 0; col < this.COLS; col++) {
+              const const_col=document.createElement("div");
+              const_col.classList.add("col", "empty");
+              const_col.setAttribute('data-col', col);
+              const_col.setAttribute('data-row', row);
+            const_row.appendChild(const_col);
+          }
+         board.appendChild(const_row);
+        }
+       
     }
-
-    function checkDirection(direction) {
+   
+    setupEventListeners(selector) {
+        const board=selector;
+        const that=this;
+       
+        function findLastEmptyCell(col) {
+            var cells=document.querySelectorAll('.col[data-col="' + col + '"]');
+            for(let i=cells.length-1; i>=0; i--) {
+                const cell=cells[i];
+                if(cell.classList.contains("empty")){
+                    return cell;
+                }
+            }
+            return null;
+        }
+        if(board) {
+            document.querySelectorAll('#connect4 .col.empty').forEach(function(elem) {
+                elem.addEventListener("mouseenter", function() {
+                    if(that.isGameOver)
+                        return;
+                    const col= elem.getAttribute('data-col');
+                    const lastEmptyCell = findLastEmptyCell(col);
+                    lastEmptyCell.classList.add('next-'+that.player);
+                });
+            });
+        }
+        if(board) {
+            document.querySelectorAll('#connect4 .col').forEach(function(elem) {
+                elem.addEventListener("mouseleave", function() {
+                    const col = elem.getAttribute('data-col');
+					const lastEmptyCell = findLastEmptyCell(col);
+                    lastEmptyCell.classList.remove('next-'+that.player);
+					
+                });
+            });
+        } 
+		
+		if(board) {
+			document.querySelectorAll('#connect4 .col.empty').forEach(function(elem) {
+				elem.addEventListener("click", function() {
+					if(that.isGameOver) return;
+					const col = elem.getAttribute('data-col');
+					const lastEmptyCell = findLastEmptyCell(col);
+					lastEmptyCell.classList.remove('empty', 'next-'+that.player);
+					lastEmptyCell.classList.add(that.player);
+					lastEmptyCell.setAttribute('player', that.player);
+					
+					const winner=that.checkForWinner(
+						lastEmptyCell.getAttribute('data-row'),
+						lastEmptyCell.getAttribute('data-col')
+					)
+					if(winner) {
+						that.isGameOver=true; 
+						alert('Game Over! Player '+that.player +' has won!');
+						console.log(elem.classList);
+						elem.classList.remove("empty");
+						return;
+					}
+					that.player = (that.player === 'red') ? 'black' : 'red';
+					that.onPlayerMove();
+					var event=document.createEvent('HTMLEvents');
+					event.initEvent('mouseenter', true, false);
+					this.dispatchEvent(event);	 		
+				});
+			});
+		}
+         
+       
+    }
+	checkForWinner(row, col) {
+		const that=this;
+		
+		function getCell(i,j) {
+			//var cells=document.querySelectorAll('.col[data-col="' + col + '"]');
+			return document.querySelector('.col[data-row="' + i + '"]'+'[data-col="'+j+'"]');
+			
+		}
+		
+		function checkDirection(direction) {
       let total = 0;
-      let i = row + direction.i;
-      let j = col + direction.j;
-      let $next = $getCell(i, j);
+	  console.log('test1', total);
+      let i = Number(row) + Number(direction.i);
+      let j = Number(col) + Number(direction.j);
+      let next = getCell(i, j);
+	  console.log(next);
       while (i >= 0 &&
         i < that.ROWS &&
         j >= 0 &&
         j < that.COLS && 
-        $next.data('player') === that.player
-      ) {
+        next.getAttribute('player') === that.player) 
+	  {
+		
+		console.log('test2', total);
         total++;
+		console.log("total:", total);
         i += direction.i;
         j += direction.j;
-        $next = $getCell(i, j);
+        next = getCell(i, j);
       }
       return total;
     }
@@ -149,11 +167,6 @@ class Connect4 {
       checkHorizontals() || 
       checkDiagonalBLtoTR() ||
       checkDiagonalTLtoBR();
-  }
-
-  restart (rows, columns, player1, player2, whostart) {
-	var connect4=new Connect4('#connect4', rows, columns, player1, player2, whostart);
-	//this.onPlayerMove();
-
-  }
+	}
+	
 }
