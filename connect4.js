@@ -14,7 +14,8 @@ class Connect4 {
         this.isGameOver = false;
         this.onPlayerMove = function() {};
         this.createGrid(this.selector, this.playername);
-        this.setupEventListeners(this.selector);
+        this.setupEventListeners(this.selector, player1, player2);
+		document.getElementById("player").innerHTML=this.playername;
     }
  
     createGrid(selector, player1) {
@@ -35,7 +36,7 @@ class Connect4 {
        
     }
    
-    setupEventListeners(selector) {
+    setupEventListeners(selector, player1, player2) {
         const board=selector;
         const that=this;
        
@@ -49,6 +50,20 @@ class Connect4 {
             }
             return null;
         }
+		
+		function gameOver(winner, elem) {
+			that.isGameOver=true; 
+			alert('Game Over! Player '+that.playername +' has won!');
+			elem.classList.remove("empty");
+			that.ratings(that.playername);
+		}
+		
+		function computerMove() {
+			var col=Math.floor(Math.random()*Number(that.COLS));
+			console.log(col);
+			findLasteEmptyCell(col);
+		}
+		
         if(board) {
             document.querySelectorAll('#connect4 .col.empty').forEach(function(elem) {
                 elem.addEventListener("mouseenter", function() {
@@ -60,6 +75,7 @@ class Connect4 {
                 });
             });
         }
+		
         if(board) {
             document.querySelectorAll('#connect4 .col').forEach(function(elem) {
                 elem.addEventListener("mouseleave", function() {
@@ -85,15 +101,38 @@ class Connect4 {
 						lastEmptyCell.getAttribute('data-row'),
 						lastEmptyCell.getAttribute('data-col')
 					)
-					if(winner) {
-						that.isGameOver=true; 
-						alert('Game Over! Player '+that.player +' has won!');
-						console.log(elem.classList);
-						elem.classList.remove("empty");
+					
+					document.getElementById("giveup").onclick=function(){
+						if(String(that.playername)===player1) {
+						console.log(that.playername);
+						 that.player='black';
+						 that.playername=player2;
+						}
+						else {
+						 console.log(that.playername);
+						 that.player='red';
+						 that.playername=player1;
+						}
+						gameOver(that.player, elem);
 						return;
 					}
-					that.player = (that.player === 'red') ? 'black' : 'red';
+					if(winner) {
+						console.log(that.player);
+						gameOver(that.player, elem);
+						return;
+					}
+					if(String(that.playername)===player1) {
+						console.log(that.playername);
+						 that.player='black';
+						 that.playername=player2;
+					}
+					else {
+						 console.log(that.playername);
+						 that.player='red';
+						 that.playername=player1;
+					 }
 					that.onPlayerMove();
+					document.getElementById("player").innerHTML=that.playername;
 					var event=document.createEvent('HTMLEvents');
 					event.initEvent('mouseenter', true, false);
 					this.dispatchEvent(event);	 		
@@ -107,33 +146,26 @@ class Connect4 {
 		const that=this;
 		
 		function getCell(i,j) {
-			//var cells=document.querySelectorAll('.col[data-col="' + col + '"]');
-			return document.querySelector('.col[data-row="' + i + '"]'+'[data-col="'+j+'"]');
-			
+			return document.querySelector('.col[data-row="' + i + '"]'+'[data-col="'+j+'"]');		
 		}
 		
 		function checkDirection(direction) {
-      let total = 0;
-	  console.log('test1', total);
-      let i = Number(row) + Number(direction.i);
-      let j = Number(col) + Number(direction.j);
-      let next = getCell(i, j);
-	  console.log(next);
-      while (i >= 0 &&
-        i < that.ROWS &&
-        j >= 0 &&
-        j < that.COLS && 
-        next.getAttribute('player') === that.player) 
-	  {
-		
-		console.log('test2', total);
-        total++;
-		console.log("total:", total);
-        i += direction.i;
-        j += direction.j;
-        next = getCell(i, j);
-      }
-      return total;
+			let total = 0;
+			let i = Number(row) + Number(direction.i);
+			let j = Number(col) + Number(direction.j);
+			let next = getCell(i, j);
+			
+			while (i >= 0 &&
+			i < that.ROWS &&
+			j >= 0 &&
+			j < that.COLS && 
+			next.getAttribute('player') === that.player) {
+				total++;
+				i += direction.i;
+				j += direction.j;
+				next = getCell(i, j);
+			}
+			return total;
     }
 
     function checkWin(directionA, directionB) {
@@ -169,4 +201,26 @@ class Connect4 {
       checkDiagonalTLtoBR();
 	}
 	
+	ratings(winner) {
+		const that=this;
+	    
+		function ratingsList(winner){
+			var temp=0;
+			if(!localStorage.getItem(winner)) {
+				console.log(1);
+				temp=1;
+				localStorage.setItem(winner,temp);
+			}
+			else {
+				console.log(2);
+				temp=Number(localStorage.getItem(winner));
+				temp++;
+				localStorage.setItem(winner, temp);
+			}
+			console.log(localStorage);
+			
+		}
+		
+		return ratingsList(winner);
+	}
 }

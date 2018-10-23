@@ -96,6 +96,9 @@ body {
     cursor: pointer;
 }
 
+#turn {
+	display:none;
+}
 
 #loginform{
     position: absolute;

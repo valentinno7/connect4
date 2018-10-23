@@ -2,7 +2,6 @@
   <head>
     <title>Connect 4</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="connect4.js"></script>
     <script src="main.js"></script>
   </head>
@@ -48,7 +47,7 @@
 		<div id="container">
 			<div id="ratings" class="table-cell">
 				<h3>Ratings</h3>
-				<p><strong>Top players:</strong></p>
+				<button id="results" onclick="showResults">Show results!</button>
 			</div>
 		
 			<div id="configuration" class="table-cell">
@@ -60,7 +59,7 @@
 					</div>
 					<div class="names">
 						<input name="player1" id="player1_name" placeholder="Players 1 name" type="text" value="Guest">
-						<input name="player2" id="player2_name" placeholder="Players 2 name" type="text" value="P2">
+						<input name="player2" id="player2_name" placeholder="Players 2 name" type="text" value="Computer">
 					</div>
 					<div class="starts">
 						<select name="Who starts?" id="firstToStart">
@@ -68,17 +67,18 @@
 							<option value=2>Second player</option>
 						</select>
 					</div>
-					<button id="submit">Submit</button>
+					<button id="submit" type="button">Submit</button>
+					
 				</form>
 				<br>
-				<button id="restart">Restart</button>
+				<button id="giveup" type="button">Give up</button>
 			</div>
 	</div>
 	
     <div id="connect4">
-	<!--<h4>It's <span id="player">red</span>'s turn!</h4>-->
 	</div>
 		<br>
+	<h4 id="turn">It's <span id="player">red</span>'s turn!</h4>
 		
   </body>
 </html>
