@@ -15,10 +15,14 @@ class Connect4 {
         this.onPlayerMove = function() {};
         this.createGrid(this.selector, this.playername);
         this.setupEventListeners(this.selector, player1, player2);
-		document.getElementById("player").innerHTML=this.playername;
+		if(this.playername=='Computer'){
+			this.computerMove();
+			this.changePlayer(player1, player2);
+		}
     }
- 
+	
     createGrid(selector, player1) {
+		const that=this;
         const board = selector;
         this.isGameOver = false;
         for (let row = 0; row < this.ROWS; row++) {
@@ -33,15 +37,21 @@ class Connect4 {
           }
          board.appendChild(const_row);
         }
-       
     }
-   
-    setupEventListeners(selector, player1, player2) {
-        const board=selector;
-        const that=this;
-       
-        function findLastEmptyCell(col) {
-            var cells=document.querySelectorAll('.col[data-col="' + col + '"]');
+	
+	computerMove() {
+		const that=this;
+		function setCol() {
+			that.fillCell(that.findLastEmptyCell(Math.floor(Math.random()*Number(that.COLS))));
+		}
+		return setCol();
+	}
+	
+	findLastEmptyCell(col) {
+		const that=this;
+		
+		function findLastEmptyCell(col) {
+			var cells=document.querySelectorAll('.col[data-col="' + col + '"]');
             for(let i=cells.length-1; i>=0; i--) {
                 const cell=cells[i];
                 if(cell.classList.contains("empty")){
@@ -49,20 +59,46 @@ class Connect4 {
                 }
             }
             return null;
-        }
-		
+		}
+		return findLastEmptyCell(col);
+	}
+	
+	fillCell(lastEmptyCell) {
+		const that=this;
+		function fillCell(lastEmptyCell) {
+			lastEmptyCell.classList.remove('empty', 'next-'+that.player);
+			lastEmptyCell.classList.add(that.player);
+			lastEmptyCell.setAttribute('player', that.player);
+		}
+		return fillCell(lastEmptyCell);
+	}
+	
+	gameOver(winner, elem) {
+		const that=this;
 		function gameOver(winner, elem) {
 			that.isGameOver=true; 
 			alert('Game Over! Player '+that.playername +' has won!');
 			elem.classList.remove("empty");
 			that.ratings(that.playername);
+		}	
+		return gameOver(winner, elem);	
+	}
+	
+	changePlayer(player1,player2) {
+		const that=this;
+		function changePlayer(player1, player2){
+			console.log(player1+'aaaa'+player2);
+			that.playername=(that.playername==player1) ? player2:player1;
+			that.player=(that.player=='red') ? 'black':'red';
+			console.log(that.playername);
+			document.getElementById("player").innerHTML=that.playername;
 		}
-		
-		function computerMove() {
-			var col=Math.floor(Math.random()*Number(that.COLS));
-			console.log(col);
-			findLasteEmptyCell(col);
-		}
+		return changePlayer(player1, player2);
+	}
+   
+    setupEventListeners(selector, player1, player2) {
+        const board=selector;
+        const that=this;
 		
         if(board) {
             document.querySelectorAll('#connect4 .col.empty').forEach(function(elem) {
@@ -70,77 +106,53 @@ class Connect4 {
                     if(that.isGameOver)
                         return;
                     const col= elem.getAttribute('data-col');
-                    const lastEmptyCell = findLastEmptyCell(col);
+                    const lastEmptyCell = that.findLastEmptyCell(col);
                     lastEmptyCell.classList.add('next-'+that.player);
                 });
             });
         }
 		
-        if(board) {
+        if(board ) {
             document.querySelectorAll('#connect4 .col').forEach(function(elem) {
                 elem.addEventListener("mouseleave", function() {
                     const col = elem.getAttribute('data-col');
-					const lastEmptyCell = findLastEmptyCell(col);
-                    lastEmptyCell.classList.remove('next-'+that.player);
-					
+					const lastEmptyCell = that.findLastEmptyCell(col);
+                    lastEmptyCell.classList.remove('next-'+that.player);					
                 });
             });
         } 
-		
 		if(board) {
 			document.querySelectorAll('#connect4 .col.empty').forEach(function(elem) {
 				elem.addEventListener("click", function() {
 					if(that.isGameOver) return;
 					const col = elem.getAttribute('data-col');
-					const lastEmptyCell = findLastEmptyCell(col);
-					lastEmptyCell.classList.remove('empty', 'next-'+that.player);
-					lastEmptyCell.classList.add(that.player);
-					lastEmptyCell.setAttribute('player', that.player);
-					
+					const lastEmptyCell = that.findLastEmptyCell(col);
+					that.fillCell(lastEmptyCell);
+					document.getElementById("giveup").onclick=function(){
+						that.changePlayer(player1, player2);
+						that.gameOver(that.player, elem);
+						return;
+					} 
 					const winner=that.checkForWinner(
 						lastEmptyCell.getAttribute('data-row'),
 						lastEmptyCell.getAttribute('data-col')
 					)
-					
-					document.getElementById("giveup").onclick=function(){
-						if(String(that.playername)===player1) {
-						console.log(that.playername);
-						 that.player='black';
-						 that.playername=player2;
-						}
-						else {
-						 console.log(that.playername);
-						 that.player='red';
-						 that.playername=player1;
-						}
-						gameOver(that.player, elem);
-						return;
-					}
 					if(winner) {
-						console.log(that.player);
-						gameOver(that.player, elem);
+						that.gameOver(that.player, elem);
 						return;
 					}
-					if(String(that.playername)===player1) {
-						console.log(that.playername);
-						 that.player='black';
-						 that.playername=player2;
+					that.changePlayer(player1, player2);
+					if(that.playername=='Computer'){
+						that.computerMove();
+						that.changePlayer(player1, player2);
 					}
-					else {
-						 console.log(that.playername);
-						 that.player='red';
-						 that.playername=player1;
-					 }
 					that.onPlayerMove();
-					document.getElementById("player").innerHTML=that.playername;
 					var event=document.createEvent('HTMLEvents');
 					event.initEvent('mouseenter', true, false);
 					this.dispatchEvent(event);	 		
 				});
 			});
-		}
-         
-       
+		} 
     }
 	checkForWinner(row, col) {
 		const that=this;
@@ -166,39 +178,39 @@ class Connect4 {
 				next = getCell(i, j);
 			}
 			return total;
-    }
+		}
 
-    function checkWin(directionA, directionB) {
-      const total = 1 +
-        checkDirection(directionA) +
-        checkDirection(directionB);
-      if (total >= 4) {
-        return that.player;
-      } else {
-        return null;
-      }
-    }
+		function checkWin(directionA, directionB) {
+		  const total = 1 +
+			checkDirection(directionA) +
+			checkDirection(directionB);
+		  if (total >= 4) {
+			return that.player;
+		  } else {
+			return null;
+		  }
+		}
 
-    function checkDiagonalBLtoTR() {
-      return checkWin({i: 1, j: -1}, {i: 1, j: 1});
-    }
+		function checkDiagonalBLtoTR() {
+		  return checkWin({i: 1, j: -1}, {i: 1, j: 1});
+		}
 
-    function checkDiagonalTLtoBR() {
-      return checkWin({i: 1, j: 1}, {i: -1, j: -1});
-    }
+		function checkDiagonalTLtoBR() {
+		  return checkWin({i: 1, j: 1}, {i: -1, j: -1});
+		}
 
-    function checkVerticals() {
-      return checkWin({i: -1, j: 0}, {i: 1, j: 0});
-    }
+		function checkVerticals() {
+		  return checkWin({i: -1, j: 0}, {i: 1, j: 0});
+		}
 
-    function checkHorizontals() {
-      return checkWin({i: 0, j: -1}, {i: 0, j: 1});
-    }
+		function checkHorizontals() {
+		  return checkWin({i: 0, j: -1}, {i: 0, j: 1});
+		}
 
-    return checkVerticals() || 
-      checkHorizontals() || 
-      checkDiagonalBLtoTR() ||
-      checkDiagonalTLtoBR();
+		return checkVerticals() || 
+		  checkHorizontals() || 
+		  checkDiagonalBLtoTR() ||
+		  checkDiagonalTLtoBR();
 	}
 	
 	ratings(winner) {
@@ -218,9 +230,7 @@ class Connect4 {
 				localStorage.setItem(winner, temp);
 			}
 			console.log(localStorage);
-			
 		}
-		
 		return ratingsList(winner);
 	}
 }
