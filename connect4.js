@@ -219,17 +219,14 @@ class Connect4 {
 		function ratingsList(winner){
 			var temp=0;
 			if(!localStorage.getItem(winner)) {
-				console.log(1);
 				temp=1;
 				localStorage.setItem(winner,temp);
 			}
 			else {
-				console.log(2);
 				temp=Number(localStorage.getItem(winner));
 				temp++;
 				localStorage.setItem(winner, temp);
 			}
-			console.log(localStorage);
 		}
 		return ratingsList(winner);
 	}

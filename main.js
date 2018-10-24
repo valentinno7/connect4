@@ -26,29 +26,10 @@ document.addEventListener("DOMContentLoaded", function() {
 			document.getElementById("turn").style.display="block";
 			event.preventDefault();
 		}
-		
-		document.getElementById("results").onclick=function(event) {
-			var temp='';
-			var i=0;
-			for(var key in localStorage) {
-				if(i<=localStorage.length) {	
-					console.log(temp);
-					document.getElementById("ratings").innerHTML+=temp;
-					i++;
-					temp='<br>'+i+'. '+key+' '+localStorage[key]+'';
-				}
-				else {
-					break;
-				}
-			}
-			event.preventDefault();
-		}
 });
 
 	function on() {
 		document.getElementById("overlay").style.display = "block";
-		
-		
 	}
 
 	function off() {
@@ -63,6 +44,24 @@ document.addEventListener("DOMContentLoaded", function() {
 		off();
 		event.preventDefault();
 	}
+	
+	function showResults(){
+		var temp='';
+		var i=0;
+		for(var key in localStorage) {
+			if(i<=localStorage.length && i<=5) {	
+				console.log(temp);
+				document.getElementById("ratings").innerHTML+=temp;
+				i++;
+				temp='<br>'+i+'. '+key+' '+localStorage[key]+'';
+				}
+				else {
+					break;
+				}
+			}
+			event.preventDefault(); 
+	}
+
 	
 	
 	
