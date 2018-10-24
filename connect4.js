@@ -42,8 +42,14 @@ class Connect4 {
 	computerMove() {
 		const that=this;
 		function setCol() {
-			that.fillCell(that.findLastEmptyCell(Math.floor(Math.random()*Number(that.COLS))));
+			var col;
+			do {
+				col=Math.floor(Math.random()*Number(that.COLS));
+				console.log('ups'+col);
+			} while(that.findLastEmptyCell(col)==null)
+			that.fillCell(that.findLastEmptyCell(col));
 		}
+		
 		return setCol();
 	}
 	
@@ -87,10 +93,8 @@ class Connect4 {
 	changePlayer(player1,player2) {
 		const that=this;
 		function changePlayer(player1, player2){
-			console.log(player1+'aaaa'+player2);
 			that.playername=(that.playername==player1) ? player2:player1;
 			that.player=(that.player=='red') ? 'black':'red';
-			console.log(that.playername);
 			document.getElementById("player").innerHTML=that.playername;
 		}
 		return changePlayer(player1, player2);

@@ -22,6 +22,7 @@ body {
 	background-color: yellow;
 	dipslay: inline-block;
 	margin-top:300px;
+	cursor:auto;
 }
 
 .col {
