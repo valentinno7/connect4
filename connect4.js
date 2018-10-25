@@ -1,5 +1,6 @@
 class Connect4 {
     constructor (selector, rows, columns, player1, player2, whostart, level) {
+		//localStorage.clear();
         this.ROWS = rows;
         this.COLS = columns;
         this.level=level;
@@ -18,7 +19,9 @@ class Connect4 {
         this.onPlayerMove = function() {};
         this.createGrid(this.selector, this.playername);
         this.setupEventListeners(this.selector, player1, player2);
-        document.getElementById('turn').innerHTML=('It is Player '+this.playername +' turn!');
+		if(localStorage.length==0) {
+			localStorage.setItem(1,columns-1);
+		}
 		if(this.playername=='Computer'){
 			this.computerMove();
 			this.changePlayer(player1, player2);
@@ -45,30 +48,29 @@ class Connect4 {
 	
 	computerMove(elem) {
 		const that=this;
-		function setCol() {
+		function setCol(elem) {
 			that.computerturn++;
 			console.log(that.computerturn);
 			var col;
+			if(that.level==2) {
+				var col=Number(localStorage.getItem(String(that.computerturn)));
+			}
+			else {
 			do {
 				col=Math.floor(Math.random()*Number(that.COLS));
 			} while(that.findLastEmptyCell(col)==null)
+			}	
 			const lastEmptyCell=that.findLastEmptyCell(col);
 			that.fillCell(lastEmptyCell);
-			if(elem!=null)
-			isWinner(lastEmptyCell);
-		}
-		
-		function isWinner(cell) {
 			const winner=that.checkForWinner(
-						cell.getAttribute('data-row'),
-						cell.getAttribute('data-col')
+						lastEmptyCell.getAttribute('data-row'),
+						lastEmptyCell.getAttribute('data-col')
 					)
 			if(winner) {
-				that.gameOver(that.player, elem);
-				return;
+				console.log(that.playername);
+				that.gameOver(that.playername, elem);
 			}
 		}
-		
 		return setCol(elem);
 	}
 	
@@ -101,12 +103,13 @@ class Connect4 {
 	gameOver(winner, elem) {
 		const that=this;
 		function gameOver(winner, elem) {
+			console.log('opapap');
+			document.getElementById('turn').innerHTML='Game Over! Player '+that.playername +' has won!';
 			that.isGameOver=true; 
-			document.getElementById('turn').innerHTML=('Game Over! Player '+that.playername +' has won!');
 			elem.classList.remove("empty");
 			that.ratings(that.playername);
 		}	
-		return gameOver(winner, elem);	
+		gameOver(winner, elem);	
 	}
 	
 	changePlayer(player1,player2) {
@@ -151,6 +154,9 @@ class Connect4 {
 					if(that.isGameOver) return;
 					that.playerturn++;
 					const col = elem.getAttribute('data-col');
+					if(localStorage.getItem(String(that.playerturn))&& Number(localStorage.key(String(that.playerturn)))>col)
+						localStorage.removeItem(String(that.playerturn));
+					localStorage.setItem(that.playerturn, col);
 					const lastEmptyCell = that.findLastEmptyCell(col);
 					that.fillCell(lastEmptyCell);
 					document.getElementById("giveup").onclick=function(){
@@ -243,14 +249,14 @@ class Connect4 {
 	    
 		function ratingsList(winner){
 			var temp=0;
-			if(!localStorage.getItem(winner)) {
+			if(!sessionStorage.getItem(winner)) {
 				temp=1;
-				localStorage.setItem(winner,temp);
+				sessionStorage.setItem(winner,temp);
 			}
 			else {
-				temp=Number(localStorage.getItem(winner));
+				temp=Number(sessionStorage.getItem(winner));
 				temp++;
-				localStorage.setItem(winner, temp);
+				sessionStorage.setItem(winner, temp);
 			}
 		}
 		return ratingsList(winner);

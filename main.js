@@ -21,8 +21,9 @@ document.addEventListener("DOMContentLoaded", function() {
 				connect4=new Connect4('#connect4', document.getElementById('rows').value, document.getElementById('columns').value, 
 										document.getElementById('player1_name').value, document.getElementById('player2_name').value,
 										document.getElementById('firstToStart').value);
-				document.getElementById('winner').innerHTML='';
+				
 			}  
+			document.getElementById('turn').innerHTML='';
 			document.getElementById("turn").style.display="block";
 			event.preventDefault();
 		}
@@ -49,10 +50,10 @@ document.addEventListener("DOMContentLoaded", function() {
 		document.getElementById("ratingsList").innerHTML='';
 		var temp='';
 		var i=0;
-		for(var key in localStorage) {
-			if(i<localStorage.length) {	
+		for(var key in sessionStorage) {
+			if(i<sessionStorage.length) {	
 				i++;
-				temp='<br>'+i+'. '+key+' '+localStorage[key]+'';
+				temp='<br>'+i+'. '+key+' '+sessionStorage[key]+'';
 				document.getElementById("ratingsList").innerHTML+=temp;
 				}
 				else {
