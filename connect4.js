@@ -1,7 +1,10 @@
 class Connect4 {
-    constructor (selector, rows, columns, player1, player2, whostart) {
+    constructor (selector, rows, columns, player1, player2, whostart, level) {
         this.ROWS = rows;
         this.COLS = columns;
+        this.level=level;
+        this.playerturn=0;
+        this.computerturn=0;
         if(whostart==1) {
             this.playername= player1;
             this.player='red';
@@ -15,6 +18,7 @@ class Connect4 {
         this.onPlayerMove = function() {};
         this.createGrid(this.selector, this.playername);
         this.setupEventListeners(this.selector, player1, player2);
+        document.getElementById('turn').innerHTML=('It is Player '+this.playername +' turn!');
 		if(this.playername=='Computer'){
 			this.computerMove();
 			this.changePlayer(player1, player2);
@@ -42,6 +46,8 @@ class Connect4 {
 	computerMove(elem) {
 		const that=this;
 		function setCol() {
+			that.computerturn++;
+			console.log(that.computerturn);
 			var col;
 			do {
 				col=Math.floor(Math.random()*Number(that.COLS));
@@ -96,7 +102,7 @@ class Connect4 {
 		const that=this;
 		function gameOver(winner, elem) {
 			that.isGameOver=true; 
-			alert('Game Over! Player '+that.playername +' has won!');
+			document.getElementById('turn').innerHTML=('Game Over! Player '+that.playername +' has won!');
 			elem.classList.remove("empty");
 			that.ratings(that.playername);
 		}	
@@ -108,7 +114,8 @@ class Connect4 {
 		function changePlayer(player1, player2){
 			that.playername=(that.playername==player1) ? player2:player1;
 			that.player=(that.player=='red') ? 'black':'red';
-			document.getElementById("player").innerHTML=that.playername;
+			console.log(that.playername);
+			document.getElementById('turn').innerHTML=('It is Player '+that.playername +' turn!');
 		}
 		return changePlayer(player1, player2);
 	}
@@ -142,6 +149,7 @@ class Connect4 {
 			document.querySelectorAll('#connect4 .col.empty').forEach(function(elem) {
 				elem.addEventListener("click", function click() {
 					if(that.isGameOver) return;
+					that.playerturn++;
 					const col = elem.getAttribute('data-col');
 					const lastEmptyCell = that.findLastEmptyCell(col);
 					that.fillCell(lastEmptyCell);

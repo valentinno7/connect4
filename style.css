@@ -131,20 +131,20 @@ body {
 	display: table;
 	float:left;
 	width:100%;
-	min-height:300px;
+	min-height:350px;
 }
 #ratings {
 	background-color:#f0f8ff;
 	float:left;
 	width:50%;
-	min-height:200px;
+	min-height:250px;
 }
 
 #configuration {
 	background-color:8b8878;
 	float:left;
 	width:50%;
-	min-height:200px; 	
+	min-height:250px; 	
 }
 
 .table-cell {

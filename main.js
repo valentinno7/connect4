@@ -2,13 +2,12 @@ document.addEventListener("DOMContentLoaded", function() {
 		document.getElementById("submit").onclick=function(event) {
 			
 			if (document.getElementById('player1_name').value=="Guest") {
-				console.log(document.getElementById('player1_name').value);
 				if(!confirm("If you want your results to be stored sign in or sign up!"))
 				return;
 			} 
 			var connect4=new Connect4('#connect4', document.getElementById('rows').value, document.getElementById('columns').value, 
 										document.getElementById('player1_name').value, document.getElementById('player2_name').value,
-										document.getElementById('firstToStart').value);
+										document.getElementById('firstToStart').value, document.getElementById('level').value);
 
 			var btn = document.getElementById('submit');
 			if (btn.innerHTML=="Submit") {		
@@ -22,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
 				connect4=new Connect4('#connect4', document.getElementById('rows').value, document.getElementById('columns').value, 
 										document.getElementById('player1_name').value, document.getElementById('player2_name').value,
 										document.getElementById('firstToStart').value);
+				document.getElementById('winner').innerHTML='';
 			}  
 			document.getElementById("turn").style.display="block";
 			event.preventDefault();
@@ -50,11 +50,10 @@ document.addEventListener("DOMContentLoaded", function() {
 		var temp='';
 		var i=0;
 		for(var key in localStorage) {
-			if(i<=localStorage.length) {	
-				console.log(temp);
-				document.getElementById("ratingsList").innerHTML+=temp;
+			if(i<localStorage.length) {	
 				i++;
 				temp='<br>'+i+'. '+key+' '+localStorage[key]+'';
+				document.getElementById("ratingsList").innerHTML+=temp;
 				}
 				else {
 					break;
