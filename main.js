@@ -46,12 +46,13 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 	
 	function showResults(){
+		document.getElementById("ratingsList").innerHTML='';
 		var temp='';
 		var i=0;
 		for(var key in localStorage) {
-			if(i<=localStorage.length && i<=5) {	
+			if(i<=localStorage.length) {	
 				console.log(temp);
-				document.getElementById("ratings").innerHTML+=temp;
+				document.getElementById("ratingsList").innerHTML+=temp;
 				i++;
 				temp='<br>'+i+'. '+key+' '+localStorage[key]+'';
 				}
@@ -61,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			}
 			event.preventDefault(); 
 	}
-
+	
 	
 	
 	

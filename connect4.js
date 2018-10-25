@@ -39,18 +39,31 @@ class Connect4 {
         }
     }
 	
-	computerMove() {
+	computerMove(elem) {
 		const that=this;
 		function setCol() {
 			var col;
 			do {
 				col=Math.floor(Math.random()*Number(that.COLS));
-				console.log('ups'+col);
 			} while(that.findLastEmptyCell(col)==null)
-			that.fillCell(that.findLastEmptyCell(col));
+			const lastEmptyCell=that.findLastEmptyCell(col);
+			that.fillCell(lastEmptyCell);
+			if(elem!=null)
+			isWinner(lastEmptyCell);
 		}
 		
-		return setCol();
+		function isWinner(cell) {
+			const winner=that.checkForWinner(
+						cell.getAttribute('data-row'),
+						cell.getAttribute('data-col')
+					)
+			if(winner) {
+				that.gameOver(that.player, elem);
+				return;
+			}
+		}
+		
+		return setCol(elem);
 	}
 	
 	findLastEmptyCell(col) {
@@ -106,7 +119,7 @@ class Connect4 {
 		
         if(board) {
             document.querySelectorAll('#connect4 .col.empty').forEach(function(elem) {
-                elem.addEventListener("mouseenter", function() {
+                elem.addEventListener("mouseenter", function enter() {
                     if(that.isGameOver)
                         return;
                     const col= elem.getAttribute('data-col');
@@ -118,7 +131,7 @@ class Connect4 {
 		
         if(board ) {
             document.querySelectorAll('#connect4 .col').forEach(function(elem) {
-                elem.addEventListener("mouseleave", function() {
+                elem.addEventListener("mouseleave", function leave() {
                     const col = elem.getAttribute('data-col');
 					const lastEmptyCell = that.findLastEmptyCell(col);
                     lastEmptyCell.classList.remove('next-'+that.player);					
@@ -127,7 +140,7 @@ class Connect4 {
         } 
 		if(board) {
 			document.querySelectorAll('#connect4 .col.empty').forEach(function(elem) {
-				elem.addEventListener("click", function() {
+				elem.addEventListener("click", function click() {
 					if(that.isGameOver) return;
 					const col = elem.getAttribute('data-col');
 					const lastEmptyCell = that.findLastEmptyCell(col);
@@ -147,7 +160,7 @@ class Connect4 {
 					}
 					that.changePlayer(player1, player2);
 					if(that.playername=='Computer'){
-						that.computerMove();
+						that.computerMove(elem);
 						that.changePlayer(player1, player2);
 					}
 					that.onPlayerMove();
