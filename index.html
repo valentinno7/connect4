@@ -24,16 +24,14 @@
 	</div>
 	<div id="overlay">
 	<button id="closebtn" onclick="off()">Close</button>
-		<form>
 			<div id="loginform">
 				<h6>Sign in!</h6>
 				<input name="login" id="login" placeholder="Username" type="text">
-				<input name="password" class="pass" placeholder="Password" type="password">
+				<input name="password" id="pass" placeholder="Password" type="password">
 				<br>
 				<button id="signinbutton" onclick="signIn()">Sign in</button>
-				<button id="regbutton" onclick="off()">Sign up</button>
+				<button id="regbutton" onclick="signUp()">Sign up</button>
 			</div>
-		</form>
 	</div>
 
 	<div id="instructions">
@@ -63,7 +61,8 @@
 					</div>
 					<div class="names">
 						<input name="player1" id="player1_name" placeholder="Players 1 name" type="text" value="Guest">
-						<input name="player2" id="player2_name" placeholder="Players 2 name" type="text" value="Computer">
+						<br>
+						<input name="player2" id="player2_name" placeholder="Players 2 name" type="checkbox" value="Computer">Do you want to play against computer?<br>
 					</div>
 					<div class="starts">
 						<select name="Who starts?" id="firstToStart">
