@@ -1,23 +1,27 @@
 class Connect4 {
-    constructor (selector, rows, columns, player1, player2, whostart, level) {
-		//localStorage.clear();
+    constructor (selector, rows, columns, player1, player2, whostart, level, pass) {
         this.ROWS = rows;
         this.COLS = columns;
         this.level=level;
         this.playerturn=0;
         this.computerturn=0;
-        if(whostart==1) {
-            this.playername= player1;
-            this.player='red';
-        }
-        else if(whostart==2) {
-            this.playername= player2;
-            this.player='black';
-        }
         this.selector = document.querySelector("#connect4");
         this.isGameOver = false;
         this.onPlayerMove = function() {};
-        this.createGrid(this.selector, this.playername);
+		if(player2!="Computer"){
+			this.joinGame(player1,pass, parseInt(this.ROWS), parseInt(this.COLS));	
+		}
+		else {
+			if(whostart==1) {
+				this.playername= player1;
+				this.player='red';
+        }
+			else if(whostart==2) {
+				this.playername= player2;
+				this.player='black';
+			}
+		}
+        this.createGrid(this.selector, this.playername, whostart);
         this.setupEventListeners(this.selector, player1, player2);
 		if(localStorage.length==0) {
 			localStorage.setItem(1,columns-1);
@@ -28,6 +32,23 @@ class Connect4 {
 			this.changePlayer(player1, player2);
 		}
     }
+	
+	joinGame(login, pass, rows, columns) {
+		console.log(typeof rows);
+		const xhr = new XMLHttpRequest();
+		const url = "http://twserver.alunos.dcc.fc.up.pt:8008/join";
+		var data = JSON.stringify({"group": 99, "nick": login, "pass": pass, 
+								   "size": { "rows":rows, "columns":columns}});
+		xhr.open("POST", url, true);
+		console.log(data);
+		xhr.send(data);
+		xhr.onreadystatechange=function() {
+			if(xhr.readyState===4 && xhr.status==200){
+				console.log(xhr.responseText);	
+			}
+		}
+	}
+	
 	
     createGrid(selector, player1) {
 		const that=this;

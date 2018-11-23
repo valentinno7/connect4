@@ -7,9 +7,12 @@ document.addEventListener("DOMContentLoaded", function() {
 			} 
 			if(document.getElementById('player2_name').checked==true)
 				document.getElementById('player2_name').value="Computer";
+			else 
+				document.getElementById('player2_name').value="";
 			var connect4=new Connect4('#connect4', document.getElementById('rows').value, document.getElementById('columns').value, 
 										document.getElementById('player1_name').value, document.getElementById('player2_name').value,
-										document.getElementById('firstToStart').value, document.getElementById('level').value);
+										document.getElementById('firstToStart').value, document.getElementById('level').value, 
+										document.getElementById('pass').value);
 
 			var btn = document.getElementById('submit');
 			if (btn.innerHTML=="Submit") {		
