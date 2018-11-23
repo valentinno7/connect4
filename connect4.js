@@ -34,21 +34,40 @@ class Connect4 {
     }
 	
 	joinGame(login, pass, rows, columns) {
+		const that=this;
 		console.log(typeof rows);
 		const xhr = new XMLHttpRequest();
 		const url = "http://twserver.alunos.dcc.fc.up.pt:8008/join";
-		var data = JSON.stringify({"group": 99, "nick": login, "pass": pass, 
+		var data = JSON.stringify({"group": 44, "nick": login, "pass": pass, 
 								   "size": { "rows":rows, "columns":columns}});
 		xhr.open("POST", url, true);
 		console.log(data);
 		xhr.send(data);
 		xhr.onreadystatechange=function() {
 			if(xhr.readyState===4 && xhr.status==200){
-				console.log(xhr.responseText);	
+				console.log(xhr.responseText);
+				that.updateGame(login, JSON.parse(xhr.responseText));	
 			}
 		}
 	}
 	
+	updateGame(login,gameId){
+		console.log(gameId.game);
+		const xhr = new XMLHttpRequest();
+		var data=encodeURI("nick="+login+"&game="+gameId.game);
+		var url="http://twserver.alunos.dcc.fc.up.pt:8008/update?"+data;
+		console.log(encodeURI(url));
+		xhr.open("GET", url, true);
+		xhr.send();
+		xhr.onreadystatechange=function() {
+			console.log(xhr.readyState, xhr.status);
+			console.log(xhr.responseText);
+			if(xhr.readyState===4 && xhr.status==200){
+				console.log(xhr.responseText);	
+				console.log("teeest");
+			}
+		}		
+	} 
 	
     createGrid(selector, player1) {
 		const that=this;
