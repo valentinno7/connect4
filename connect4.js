@@ -9,6 +9,9 @@ class Connect4 {
         this.isGameOver = false;
         this.onPlayerMove = function() {};
 		this.pass=pass;
+		this.whostart=whostart;
+		this.player1=player1;
+		this.player2=player2;
 		if(player2!="Computer"){
 			this.playername=player1;
 			this.joinGame(player1,pass, parseInt(this.ROWS), parseInt(this.COLS));
@@ -24,8 +27,8 @@ class Connect4 {
 			}
 		}
 		this.leaveGame();
-        this.createGrid(this.selector, this.playername, whostart);
-        this.setupEventListeners(this.selector, player1, player2);
+        //this.createGrid(this.selector, this.playername, this.whostart);
+        //this.setupEventListeners(this.selector, player1, player2);
 		if(localStorage.length==0) {
 			localStorage.setItem(1,columns-1);
 			this.computerturn++;
@@ -67,6 +70,8 @@ class Connect4 {
 		xhr.onreadystatechange=function() {
 			if(xhr.readyState>=3 && xhr.status==200){
 				alert('Game start'+xhr.readyState);
+				that.createGrid(that.selector, that.playername, that.whostart);
+				that.setupEventListeners(that.selector, that.player1, that.player2);
 			}
 		}		
 	}
@@ -93,8 +98,21 @@ class Connect4 {
 		}
 	}
 	
-	notify() {
-		
+	notify(col) {
+		console.log(col);
+		const that=this;
+		const xhr = new XMLHttpRequest();
+		const url = "http://twserver.alunos.dcc.fc.up.pt:8008/notify";
+		var data = JSON.stringify({"nick": that.playername, "pass": that.pass, "game":that.gameId, "column":col});
+		console.log(data);
+		xhr.open("POST", url, true);
+		console.log(data);
+		xhr.send(data);
+		xhr.onreadystatechange=function() {
+			if(xhr.readyState===4 && xhr.status==200){
+				console.log(xhr.responseText);
+			}
+		}
 	}
 	
     createGrid(selector, player1) {
@@ -171,6 +189,7 @@ class Connect4 {
 			lastEmptyCell.classList.remove('empty', 'next-'+that.player);
 			lastEmptyCell.classList.add(that.player);
 			lastEmptyCell.setAttribute('player', that.player);
+			that.notify(lastEmptyCell.getAttribute('data-col'));
 		}
 		return fillCell(lastEmptyCell);
 	}
