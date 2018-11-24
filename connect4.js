@@ -12,6 +12,7 @@ class Connect4 {
 		this.whostart=whostart;
 		this.player1=player1;
 		this.player2=player2;
+		this.player='red';
 		if(player2!="Computer"){
 			this.playername=player1;
 			this.joinGame(player1,pass, parseInt(this.ROWS), parseInt(this.COLS));
@@ -58,6 +59,7 @@ class Connect4 {
 	}
 	
 	updateGame(login,gameId){
+		let count=0;
 		const that=this;
 		console.log(gameId.game);
 		that.gameId=gameId.game;
@@ -70,8 +72,12 @@ class Connect4 {
 		xhr.onreadystatechange=function() {
 			if(xhr.readyState>=3 && xhr.status==200){
 				alert('Game start'+xhr.readyState);
-				that.createGrid(that.selector, that.playername, that.whostart);
-				that.setupEventListeners(that.selector, that.player1, that.player2);
+				console.log(xhr.responseText);
+				count++;
+				if(count==1) {
+					that.createGrid(that.selector, that.playername, that.whostart);
+					that.setupEventListeners(that.selector, that.player1, that.player2);
+				}
 			}
 		}		
 	}
@@ -103,14 +109,14 @@ class Connect4 {
 		const that=this;
 		const xhr = new XMLHttpRequest();
 		const url = "http://twserver.alunos.dcc.fc.up.pt:8008/notify";
-		var data = JSON.stringify({"nick": that.playername, "pass": that.pass, "game":that.gameId, "column":col});
+		var data = JSON.stringify({"nick": that.player1, "pass": that.pass, "game":that.gameId, "column":col});
 		console.log(data);
 		xhr.open("POST", url, true);
 		console.log(data);
 		xhr.send(data);
 		xhr.onreadystatechange=function() {
-			if(xhr.readyState===4 && xhr.status==200){
-				console.log(xhr.responseText);
+			if(xhr.readyState>=3 && xhr.status==200){
+				console.log(JSON.parse(xhr.responseText));
 			}
 		}
 	}
@@ -188,6 +194,7 @@ class Connect4 {
 		function fillCell(lastEmptyCell) {
 			lastEmptyCell.classList.remove('empty', 'next-'+that.player);
 			lastEmptyCell.classList.add(that.player);
+			console.log(that.player);
 			lastEmptyCell.setAttribute('player', that.player);
 			that.notify(lastEmptyCell.getAttribute('data-col'));
 		}
