@@ -8,8 +8,10 @@ class Connect4 {
         this.selector = document.querySelector("#connect4");
         this.isGameOver = false;
         this.onPlayerMove = function() {};
+		this.pass=pass;
 		if(player2!="Computer"){
-			this.joinGame(player1,pass, parseInt(this.ROWS), parseInt(this.COLS));	
+			this.playername=player1;
+			this.joinGame(player1,pass, parseInt(this.ROWS), parseInt(this.COLS));
 		}
 		else {
 			if(whostart==1) {
@@ -21,6 +23,7 @@ class Connect4 {
 				this.player='black';
 			}
 		}
+		this.leaveGame();
         this.createGrid(this.selector, this.playername, whostart);
         this.setupEventListeners(this.selector, player1, player2);
 		if(localStorage.length==0) {
@@ -38,7 +41,7 @@ class Connect4 {
 		console.log(typeof rows);
 		const xhr = new XMLHttpRequest();
 		const url = "http://twserver.alunos.dcc.fc.up.pt:8008/join";
-		var data = JSON.stringify({"group": 44, "nick": login, "pass": pass, 
+		var data = JSON.stringify({"group": 99, "nick": login, "pass": pass, 
 								   "size": { "rows":rows, "columns":columns}});
 		xhr.open("POST", url, true);
 		console.log(data);
@@ -52,7 +55,9 @@ class Connect4 {
 	}
 	
 	updateGame(login,gameId){
+		const that=this;
 		console.log(gameId.game);
+		that.gameId=gameId.game;
 		const xhr = new XMLHttpRequest();
 		var data=encodeURI("nick="+login+"&game="+gameId.game);
 		var url="http://twserver.alunos.dcc.fc.up.pt:8008/update?"+data;
@@ -60,14 +65,37 @@ class Connect4 {
 		xhr.open("GET", url, true);
 		xhr.send();
 		xhr.onreadystatechange=function() {
-			console.log(xhr.readyState, xhr.status);
-			console.log(xhr.responseText);
-			if(xhr.readyState===4 && xhr.status==200){
-				console.log(xhr.responseText);	
-				console.log("teeest");
+			if(xhr.readyState>=3 && xhr.status==200){
+				alert('Game start'+xhr.readyState);
 			}
 		}		
-	} 
+	}
+
+	leaveGame() {
+		const that=this;
+		document.getElementById("giveup").onclick=function(){
+					console.log("ate");
+					leave();	
+				}
+		function leave() {
+			const xhr = new XMLHttpRequest();
+			const url = "http://twserver.alunos.dcc.fc.up.pt:8008/leave";
+			var data = JSON.stringify({"nick": that.playername, "pass": that.pass, "game":that.gameId});
+			console.log(data);
+			xhr.open("POST", url, true);
+			console.log(data);
+			xhr.send(data);
+			xhr.onreadystatechange=function() {
+				if(xhr.readyState===4 && xhr.status==200){
+					console.log(xhr.responseText);
+				}
+			}
+		}
+	}
+	
+	notify() {
+		
+	}
 	
     createGrid(selector, player1) {
 		const that=this;
@@ -209,6 +237,7 @@ class Connect4 {
 					that.fillCell(lastEmptyCell);
 					document.getElementById("giveup").onclick=function(){
 						that.changePlayer(player1, player2);
+						console.log(that.gameId);
 						that.gameOver(that.player, elem);
 						return;
 					} 
