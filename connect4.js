@@ -47,6 +47,7 @@ class Connect4 {
 		const url = "http://twserver.alunos.dcc.fc.up.pt:8008/join";
 		var data = JSON.stringify({"group": 99, "nick": login, "pass": pass, 
 								   "size": { "rows":rows, "columns":columns}});
+								   
 		xhr.open("POST", url, true);
 		console.log(data);
 		xhr.send(data);
@@ -64,19 +65,29 @@ class Connect4 {
 		console.log(gameId.game);
 		that.gameId=gameId.game;
 		const xhr = new XMLHttpRequest();
-		var data=encodeURI("nick="+login+"&game="+gameId.game);
-		var url="http://twserver.alunos.dcc.fc.up.pt:8008/update?"+data;
+		var url="http://twserver.alunos.dcc.fc.up.pt:8008/update?"+encodeURI("nick="+login+"&game="+gameId.game);
 		console.log(encodeURI(url));
 		xhr.open("GET", url, true);
 		xhr.send();
 		xhr.onreadystatechange=function() {
 			if(xhr.readyState>=3 && xhr.status==200){
 				alert('Game start'+xhr.readyState);
-				console.log(xhr.responseText);
 				count++;
 				if(count==1) {
+					console.log(xhr.responseText);
+					var temp=xhr.responseText.split('data:{"board":');
+					console.log(temp[1]);
 					that.createGrid(that.selector, that.playername, that.whostart);
 					that.setupEventListeners(that.selector, that.player1, that.player2);
+				}
+				else if (count>1){
+					var response=String(xhr.responseText);
+					var temp1=response.indexOf('\n');
+					var info=response.substr(temp1);
+					temp1=info.indexOf(":");
+					info=info.substr(temp1+1);
+					console.log(info);
+					console.log(JSON.parse(info));
 				}
 			}
 		}		
@@ -116,7 +127,7 @@ class Connect4 {
 		xhr.send(data);
 		xhr.onreadystatechange=function() {
 			if(xhr.readyState>=3 && xhr.status==200){
-				console.log(JSON.parse(xhr.responseText));
+				console.log(xhr.responseText);
 			}
 		}
 	}
