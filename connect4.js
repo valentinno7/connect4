@@ -130,14 +130,19 @@ class Connect4 {
 						waitingCanvas.style.display="block";
 						
 					}
-					if(response.winner!=undefined && response.winner!=document.getElementById('player1_name').value) {
-						that.changePlayer(that.player1, that.player2);
-						const lastEmptyCell = that.findLastEmptyCell(response.column);
-						console.log(response.column);
-						console.log(lastEmptyCell);
+					console.log(response.winner);
+					if(response.winner!=undefined) {
+						if(response.winner!=document.getElementById('player1_name').value) {
+							that.changePlayer(that.player1, that.player2);
+							const lastEmptyCell = that.findLastEmptyCell(response.column);
+							if(lastEmptyCell!=null)
+								that.fillCell(lastEmptyCell);
+							
+						}
+						console.log("canvas");
 						waitingCanvas.style.display="none";
-						that.fillCell(lastEmptyCell);
 						that.gameOver(response.winner, that.elem);
+						xhr.abort();
 						return;
 					}
 				}
@@ -154,7 +159,7 @@ class Connect4 {
 		function leave() {
 			const xhr = new XMLHttpRequest();
 			const url = "http://twserver.alunos.dcc.fc.up.pt:8008/leave";
-			var data = JSON.stringify({"nick": that.playername, "pass": that.pass, "game":that.gameId});
+			var data = JSON.stringify({"nick": document.getElementById('player1_name').value, "pass": that.pass, "game":that.gameId});
 			console.log(data);
 			xhr.open("POST", url, true);
 			console.log(data);
@@ -162,6 +167,8 @@ class Connect4 {
 			xhr.onreadystatechange=function() {
 				if(xhr.readyState===4 && xhr.status==200){
 					console.log(xhr.responseText);
+					document.getElementById('waitingCanvas').style.display="none";
+					//that.changePlayer(that.player1, that.player2);
 				}
 			}
 		}

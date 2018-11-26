@@ -104,6 +104,32 @@ document.addEventListener("DOMContentLoaded", function() {
 			event.preventDefault(); 
 	}
 	
+	function showResults2() {
+		const url = "http://twserver.alunos.dcc.fc.up.pt:8008/ranking";
+		var data = JSON.stringify({"size": { "rows": Number(document.getElementById('rows').value), "columns": Number(document.getElementById('columns').value)}});
+		console.log(data);
+		const xhr = new XMLHttpRequest();
+		xhr.open("POST", url, true);
+		xhr.send(data);
+		xhr.onreadystatechange=function() {
+			if(xhr.readyState>3 && xhr.status==200){
+				printResults(JSON.parse(String(xhr.responseText)));
+			}
+		}
+	}
+	
+	function printResults(data) {
+		console.log(data);
+		console.log(data.ranking[0]);
+		let i=0;
+		document.getElementById("ratingsList").innerHTML='';
+		for (var key in data.ranking) {
+			i++;
+			document.getElementById("ratingsList").innerHTML+='<br>'+i+'. '+data.ranking[key].nick;
+		}
+		event.preventDefault();
+	}
+	
 	
 
 	

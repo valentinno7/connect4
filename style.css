@@ -137,14 +137,14 @@ body {
 	background-color:#f0f8ff;
 	float:left;
 	width:50%;
-	min-height:250px;
+	min-height:300px;
 }
 
 #configuration {
 	background-color:8b8878;
 	float:left;
 	width:50%;
-	min-height:250px; 	
+	min-height:300px; 	
 }
 
 .table-cell {
