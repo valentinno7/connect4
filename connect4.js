@@ -71,23 +71,52 @@ class Connect4 {
 		xhr.send();
 		xhr.onreadystatechange=function() {
 			if(xhr.readyState>=3 && xhr.status==200){
-				alert('Game start'+xhr.readyState);
 				count++;
 				if(count==1) {
-					console.log(xhr.responseText);
 					var temp=xhr.responseText.split('data:{"board":');
-					console.log(temp[1]);
+					temp=String(temp);
+					let index=temp.indexOf('turn":"');
+					var temp1=temp.substr(index+7);
+					index=temp1.indexOf('"}');
+					temp1=temp1.substr(0,index);
+					console.log(temp1);
+					if(temp1==that.player1){
+						console.log('pirmas prisiloginau');
+						that.player1=temp1;
+						that.player='red';
+					}
+					else {
+						console.log('antras prisiloginau');
+						that.player2=temp1;
+						that.player='black';
+					}
+					document.getElementById('turn').innerHTML=('It is Player '+temp1 +' turn!');
+					console.log(that.player1, that.player2, that.player);
 					that.createGrid(that.selector, that.playername, that.whostart);
 					that.setupEventListeners(that.selector, that.player1, that.player2);
+					
 				}
 				else if (count>1){
+					console.log("ėjimas: "+count);
 					var response=String(xhr.responseText);
-					var temp1=response.indexOf('\n');
-					var info=response.substr(temp1);
-					temp1=info.indexOf(":");
-					info=info.substr(temp1+1);
-					console.log(info);
-					console.log(JSON.parse(info));
+					let index=response.lastIndexOf("data:");
+					response=response.substr(index+5);
+					response=JSON.parse(response);
+					console.log(response);
+					document.getElementById('turn').innerHTML=('It is Player '+response.turn +' turn!');
+					if(response.turn==document.getElementById('player1_name').value){
+						that.changePlayer(that.player1, that.player2);
+						const lastEmptyCell = that.findLastEmptyCell(response.column);
+						console.log(response.column);
+						console.log(lastEmptyCell);
+						that.fillCell(lastEmptyCell);
+						that.changePlayer(that.player1, that.player2);
+					}
+					if(response.winner!=undefined) {
+						//console.log(lastEmptyCell);
+						that.gameOver(response.winner, that.elem);
+						return;
+					}
 				}
 			}
 		}		
@@ -121,13 +150,10 @@ class Connect4 {
 		const xhr = new XMLHttpRequest();
 		const url = "http://twserver.alunos.dcc.fc.up.pt:8008/notify";
 		var data = JSON.stringify({"nick": that.player1, "pass": that.pass, "game":that.gameId, "column":col});
-		console.log(data);
 		xhr.open("POST", url, true);
-		console.log(data);
 		xhr.send(data);
 		xhr.onreadystatechange=function() {
 			if(xhr.readyState>=3 && xhr.status==200){
-				console.log(xhr.responseText);
 			}
 		}
 	}
@@ -207,7 +233,7 @@ class Connect4 {
 			lastEmptyCell.classList.add(that.player);
 			console.log(that.player);
 			lastEmptyCell.setAttribute('player', that.player);
-			that.notify(lastEmptyCell.getAttribute('data-col'));
+			//that.notify(lastEmptyCell.getAttribute('data-col'));
 		}
 		return fillCell(lastEmptyCell);
 	}
@@ -219,7 +245,7 @@ class Connect4 {
 			that.isGameOver=true; 
 			elem.classList.remove("empty");
 			that.ratings(that.playername);
-			document.getElementById('turn').innerHTML='Game Over! Player '+that.playername +' has won!';
+			document.getElementById('turn').innerHTML='Game Over! Player '+winner +' has won!';
 			return;
 		}	
 		gameOver(winner, elem);	
@@ -228,10 +254,10 @@ class Connect4 {
 	changePlayer(player1,player2) {
 		const that=this;
 		function changePlayer(player1, player2){
-			that.playername=(that.playername==player1) ? player2:player1;
+			that.playername=(that.player=='red') ? player1:player2;
 			that.player=(that.player=='red') ? 'black':'red';
 			console.log(that.playername);
-			document.getElementById('turn').innerHTML=('It is Player '+that.playername +' turn!');
+			//document.getElementById('turn').innerHTML=('It is Player '+that.playername +' turn!');
 		}
 		return changePlayer(player1, player2);
 	}
@@ -265,13 +291,18 @@ class Connect4 {
 			document.querySelectorAll('#connect4 .col.empty').forEach(function(elem) {
 				elem.addEventListener("click", function click() {
 					if(that.isGameOver) return;
+					console.log(elem);
+					that.elem=elem;
 					that.playerturn++;
 					const col = elem.getAttribute('data-col');
 					if(localStorage.getItem(String(that.playerturn))&& Number(localStorage.key(String(that.playerturn)))>col)
 						localStorage.removeItem(String(that.playerturn));
 					localStorage.setItem(that.playerturn, col);
+					console.log(col);
 					const lastEmptyCell = that.findLastEmptyCell(col);
+					console.log(lastEmptyCell);
 					that.fillCell(lastEmptyCell);
+					that.notify(lastEmptyCell.getAttribute('data-col'));
 					document.getElementById("giveup").onclick=function(){
 						that.changePlayer(player1, player2);
 						console.log(that.gameId);
@@ -286,7 +317,7 @@ class Connect4 {
 						that.gameOver(that.player, elem);
 						return;
 					}
-					that.changePlayer(player1, player2);
+					//that.changePlayer(player1, player2);
 					if(that.playername=='Computer'){
 						that.computerMove(elem, player1, player2);
 					}
