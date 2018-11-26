@@ -143,7 +143,7 @@ class Connect4 {
 						waitingCanvas.style.display="none";
 						that.gameOver(response.winner, that.elem);
 						xhr.abort();
-						return;
+						//return;
 					}
 				}
 			}

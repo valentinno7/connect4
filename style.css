@@ -155,7 +155,6 @@ body {
 	border:1px solid #000000;
 	width: 50%;
 	height:100px;
-	background-color:#ffffff;
 	position: fixed;
     display: none;
 	z-index: 2;
