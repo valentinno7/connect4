@@ -275,7 +275,7 @@ class Connect4 {
 			console.log('opapap');
 			that.isGameOver=true; 
 			elem.classList.remove("empty");
-			that.ratings(that.playername);
+			that.ratings(winner);
 			document.getElementById('turn').innerHTML='Game Over! Player '+winner +' has won!';
 			return;
 		}	
@@ -345,8 +345,9 @@ class Connect4 {
 						lastEmptyCell.getAttribute('data-row'),
 						lastEmptyCell.getAttribute('data-col')
 					)
+					console.log()
 					if(winner) {
-						that.gameOver(that.player, elem);
+						that.gameOver(that.playername, elem);
 						return;
 					}
 					console.log(that.player1, that.player2);

@@ -155,9 +155,10 @@ body {
 	border:1px solid #000000;
 	width: 50%;
 	height:100px;
+	background-color:#ffffff;
 	position: fixed;
     display: none;
 	z-index: 2;
-	background-color: rgba(0,0,0,0.5);
+	background-color: rgba(244,177,66,0.5);
 	margin: 25%;
 }
