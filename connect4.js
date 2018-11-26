@@ -26,10 +26,10 @@ class Connect4 {
 				this.playername= player2;
 				this.player='black';
 			}
+			this.createGrid(this.selector, this.playername, this.whostart);
+			this.setupEventListeners(this.selector, player1, player2);
 		}
 		this.leaveGame();
-        //this.createGrid(this.selector, this.playername, this.whostart);
-        //this.setupEventListeners(this.selector, player1, player2);
 		if(localStorage.length==0) {
 			localStorage.setItem(1,columns-1);
 			this.computerturn++;
@@ -89,6 +89,13 @@ class Connect4 {
 						console.log('antras prisiloginau');
 						that.player2=temp1;
 						that.player='black';
+						var waitingCanvas=document.getElementById('waitingCanvas');
+						var ctx=waitingCanvas.getContext("2d");
+						ctx.font="20px Times New Roman";
+						ctx.fillText("Waiting for another player turn",10,50);
+						document.getElementById('connect4').style.pointerEvents='none';
+						waitingCanvas.style.display="block";
+						
 					}
 					document.getElementById('turn').innerHTML=('It is Player '+temp1 +' turn!');
 					console.log(that.player1, that.player2, that.player);
@@ -97,6 +104,12 @@ class Connect4 {
 					
 				}
 				else if (count>1){
+					var waitingCanvas=document.getElementById('waitingCanvas');
+					var ctx=waitingCanvas.getContext("2d");
+					ctx.font="20px Times New Roman";
+					ctx.fillText("Waiting for another player turn",10,50);
+					document.getElementById('connect4').style.pointerEvents='auto';
+					waitingCanvas.style.display="none";
 					console.log("ėjimas: "+count);
 					var response=String(xhr.responseText);
 					let index=response.lastIndexOf("data:");
@@ -112,8 +125,18 @@ class Connect4 {
 						that.fillCell(lastEmptyCell);
 						that.changePlayer(that.player1, that.player2);
 					}
-					if(response.winner!=undefined) {
-						//console.log(lastEmptyCell);
+					else {
+						document.getElementById('connect4').style.pointerEvents='none';
+						waitingCanvas.style.display="block";
+						
+					}
+					if(response.winner!=undefined && response.winner!=document.getElementById('player1_name').value) {
+						that.changePlayer(that.player1, that.player2);
+						const lastEmptyCell = that.findLastEmptyCell(response.column);
+						console.log(response.column);
+						console.log(lastEmptyCell);
+						waitingCanvas.style.display="none";
+						that.fillCell(lastEmptyCell);
 						that.gameOver(response.winner, that.elem);
 						return;
 					}
@@ -153,7 +176,8 @@ class Connect4 {
 		xhr.open("POST", url, true);
 		xhr.send(data);
 		xhr.onreadystatechange=function() {
-			if(xhr.readyState>=3 && xhr.status==200){
+			if(xhr.status==400){
+				alert('not your turn');
 			}
 		}
 	}
@@ -254,7 +278,7 @@ class Connect4 {
 	changePlayer(player1,player2) {
 		const that=this;
 		function changePlayer(player1, player2){
-			that.playername=(that.player=='red') ? player1:player2;
+			that.playername=(that.player=='red') ? player2:player1;
 			that.player=(that.player=='red') ? 'black':'red';
 			console.log(that.playername);
 			//document.getElementById('turn').innerHTML=('It is Player '+that.playername +' turn!');
@@ -301,8 +325,9 @@ class Connect4 {
 					console.log(col);
 					const lastEmptyCell = that.findLastEmptyCell(col);
 					console.log(lastEmptyCell);
+					if(that.player1!='Computer' && that.player2!='Computer')
+						that.notify(lastEmptyCell.getAttribute('data-col'));
 					that.fillCell(lastEmptyCell);
-					that.notify(lastEmptyCell.getAttribute('data-col'));
 					document.getElementById("giveup").onclick=function(){
 						that.changePlayer(player1, player2);
 						console.log(that.gameId);
@@ -317,7 +342,10 @@ class Connect4 {
 						that.gameOver(that.player, elem);
 						return;
 					}
-					//that.changePlayer(player1, player2);
+					console.log(that.player1, that.player2);
+					if(that.player1=='Computer' || that.player2=='Computer')
+						that.changePlayer(player1, player2);
+					console.log(that.playername);
 					if(that.playername=='Computer'){
 						that.computerMove(elem, player1, player2);
 					}
