@@ -39,31 +39,52 @@ class Connect4 {
 			this.changePlayer(player1, player2);
 		}
     }
-	
+
 	joinGame(login, pass, rows, columns) {
 		const that=this;
 		console.log(typeof rows);
 		const xhr = new XMLHttpRequest();
 		const url = "http://twserver.alunos.dcc.fc.up.pt:8008/join";
-		var data = JSON.stringify({"group": 99, "nick": login, "pass": pass, 
+		var data = JSON.stringify({"group": 99, "nick": login, "pass": pass,
 								   "size": { "rows":rows, "columns":columns}});
-								   
+
 		xhr.open("POST", url, true);
 		console.log(data);
 		xhr.send(data);
 		xhr.onreadystatechange=function() {
 			if(xhr.readyState===4 && xhr.status==200){
 				console.log(xhr.responseText);
-				that.updateGame(login, JSON.parse(xhr.responseText));	
+				that.updateGame(login, JSON.parse(xhr.responseText));
 			}
 		}
 	}
-	
+
 	updateGame(login,gameId){
 		let count=0;
 		const that=this;
 		console.log(gameId.game);
 		that.gameId=gameId.game;
+		var c6=document.getElementById("layer6");
+		var ctx6=c6.getContext("2d");
+		ctx6.fillStyle="#FF0000";ctx6.beginPath();
+		ctx6.arc(50,50,48,0,Math.PI*2,true);
+		ctx6.closePath();
+		ctx6.fill();
+		var c8=document.getElementById("layer8");
+		var ctx8=c8.getContext("2d");
+		ctx8.fillStyle = "#000";
+		ctx8.fillStyle="#fff";
+		ctx8.fillRect(15,0,20,20);
+		var c7=document.getElementById("layer7");
+		var ctx7=c7.getContext("2d");
+		ctx7.fillStyle="#fff";
+		ctx7.beginPath();
+		ctx7.arc(50,50,42,0,Math.PI*2,true);
+		ctx7.closePath();
+		ctx7.fill();
+		ctx7.fillStyle = "#000";
+		ctx7.font ="20pt Calibri";
+		ctx7.fillText("Waiting", 10, 56);
 		const xhr = new XMLHttpRequest();
 		var url="http://twserver.alunos.dcc.fc.up.pt:8008/update?"+encodeURI("nick="+login+"&game="+gameId.game);
 		console.log(encodeURI(url));
@@ -73,6 +94,9 @@ class Connect4 {
 			if(xhr.readyState>=3 && xhr.status==200){
 				count++;
 				if(count==1) {
+					c8.style.display="none";
+					c7.style.display="none";
+					c6.style.display="none";
 					var temp=xhr.responseText.split('data:{"board":');
 					temp=String(temp);
 					let index=temp.indexOf('turn":"');
@@ -95,13 +119,13 @@ class Connect4 {
 						ctx.fillText("Waiting for another player turn",10,50);
 						document.getElementById('connect4').style.pointerEvents='none';
 						waitingCanvas.style.display="block";
-						
+
 					}
 					document.getElementById('turn').innerHTML=('It is Player '+temp1 +' turn!');
 					console.log(that.player1, that.player2, that.player);
 					that.createGrid(that.selector, that.playername, that.whostart);
 					that.setupEventListeners(that.selector, that.player1, that.player2);
-					
+
 				}
 				else if (count>1){
 					var waitingCanvas=document.getElementById('waitingCanvas');
@@ -128,7 +152,7 @@ class Connect4 {
 					else {
 						document.getElementById('connect4').style.pointerEvents='none';
 						waitingCanvas.style.display="block";
-						
+
 					}
 					console.log(response.winner);
 					if(response.winner!=undefined) {
@@ -137,7 +161,7 @@ class Connect4 {
 							const lastEmptyCell = that.findLastEmptyCell(response.column);
 							if(lastEmptyCell!=null)
 								that.fillCell(lastEmptyCell);
-							
+
 						}
 						console.log("canvas");
 						waitingCanvas.style.display="none";
@@ -147,14 +171,14 @@ class Connect4 {
 					}
 				}
 			}
-		}		
+		}
 	}
 
 	leaveGame() {
 		const that=this;
 		document.getElementById("giveup").onclick=function(){
 					console.log("ate");
-					leave();	
+					leave();
 				}
 		function leave() {
 			const xhr = new XMLHttpRequest();
@@ -173,7 +197,7 @@ class Connect4 {
 			}
 		}
 	}
-	
+
 	notify(col) {
 		console.log(col);
 		const that=this;
@@ -188,7 +212,7 @@ class Connect4 {
 			}
 		}
 	}
-	
+
     createGrid(selector, player1) {
 		const that=this;
         const board = selector;
@@ -206,7 +230,7 @@ class Connect4 {
          board.appendChild(const_row);
         }
     }
-	
+
 	computerMove(elem, player1, player2) {
 		const that=this;
 		function setCol(elem) {
@@ -220,14 +244,14 @@ class Connect4 {
 			do {
 				col=Math.floor(Math.random()*Number(that.COLS));
 			} while(that.findLastEmptyCell(col)==null)
-			}	
+			}
 			const lastEmptyCell=that.findLastEmptyCell(col);
 			that.fillCell(lastEmptyCell);
 			if(isWinner(lastEmptyCell, elem))
 				return;
 			that.changePlayer(player1, player2);
 		}
-		
+
 		function isWinner(cell, elem) {
 			const winner=that.checkForWinner(
 						cell.getAttribute('data-row'),
@@ -240,10 +264,10 @@ class Connect4 {
 		}
 		return setCol(elem, player1, player2);
 	}
-	
+
 	findLastEmptyCell(col) {
 		const that=this;
-		
+
 		function findLastEmptyCell(col) {
 			var cells=document.querySelectorAll('.col[data-col="' + col + '"]');
             for(let i=cells.length-1; i>=0; i--) {
@@ -256,7 +280,7 @@ class Connect4 {
 		}
 		return findLastEmptyCell(col);
 	}
-	
+
 	fillCell(lastEmptyCell) {
 		const that=this;
 		function fillCell(lastEmptyCell) {
@@ -268,20 +292,20 @@ class Connect4 {
 		}
 		return fillCell(lastEmptyCell);
 	}
-	
+
 	gameOver(winner, elem) {
 		const that=this;
 		function gameOver(winner, elem) {
 			console.log('opapap');
-			that.isGameOver=true; 
+			that.isGameOver=true;
 			elem.classList.remove("empty");
 			that.ratings(winner);
 			document.getElementById('turn').innerHTML='Game Over! Player '+winner +' has won!';
 			return;
-		}	
-		gameOver(winner, elem);	
+		}
+		gameOver(winner, elem);
 	}
-	
+
 	changePlayer(player1,player2) {
 		const that=this;
 		function changePlayer(player1, player2){
@@ -292,11 +316,11 @@ class Connect4 {
 		}
 		return changePlayer(player1, player2);
 	}
-   
+
     setupEventListeners(selector, player1, player2) {
         const board=selector;
         const that=this;
-		
+
         if(board) {
             document.querySelectorAll('#connect4 .col.empty').forEach(function(elem) {
                 elem.addEventListener("mouseenter", function enter() {
@@ -308,16 +332,16 @@ class Connect4 {
                 });
             });
         }
-		
+
         if(board ) {
             document.querySelectorAll('#connect4 .col').forEach(function(elem) {
                 elem.addEventListener("mouseleave", function leave() {
                     const col = elem.getAttribute('data-col');
 					const lastEmptyCell = that.findLastEmptyCell(col);
-                    lastEmptyCell.classList.remove('next-'+that.player);					
+                    lastEmptyCell.classList.remove('next-'+that.player);
                 });
             });
-        } 
+        }
 		if(board) {
 			document.querySelectorAll('#connect4 .col.empty').forEach(function(elem) {
 				elem.addEventListener("click", function click() {
@@ -340,7 +364,7 @@ class Connect4 {
 						console.log(that.gameId);
 						that.gameOver(that.player, elem);
 						return;
-					} 
+					}
 					const winner=that.checkForWinner(
 						lastEmptyCell.getAttribute('data-row'),
 						lastEmptyCell.getAttribute('data-col')
@@ -360,28 +384,28 @@ class Connect4 {
 					that.onPlayerMove();
 					var event=document.createEvent('HTMLEvents');
 					event.initEvent('mouseenter', true, false);
-					this.dispatchEvent(event);	 		
+					this.dispatchEvent(event);
 				});
 			});
-		} 
+		}
     }
 	checkForWinner(row, col) {
 		const that=this;
-		
+
 		function getCell(i,j) {
-			return document.querySelector('.col[data-row="' + i + '"]'+'[data-col="'+j+'"]');		
+			return document.querySelector('.col[data-row="' + i + '"]'+'[data-col="'+j+'"]');
 		}
-		
+
 		function checkDirection(direction) {
 			let total = 0;
 			let i = Number(row) + Number(direction.i);
 			let j = Number(col) + Number(direction.j);
 			let next = getCell(i, j);
-			
+
 			while (i >= 0 &&
 			i < that.ROWS &&
 			j >= 0 &&
-			j < that.COLS && 
+			j < that.COLS &&
 			next.getAttribute('player') === that.player) {
 				total++;
 				i += direction.i;
@@ -418,15 +442,15 @@ class Connect4 {
 		  return checkWin({i: 0, j: -1}, {i: 0, j: 1});
 		}
 
-		return checkVerticals() || 
-		  checkHorizontals() || 
+		return checkVerticals() ||
+		  checkHorizontals() ||
 		  checkDiagonalBLtoTR() ||
 		  checkDiagonalTLtoBR();
 	}
-	
+
 	ratings(winner) {
 		const that=this;
-	    
+
 		function ratingsList(winner){
 			var temp=0;
 			if(!sessionStorage.getItem(winner)) {

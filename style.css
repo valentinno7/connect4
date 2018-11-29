@@ -6,12 +6,12 @@ body {
 
 .top{
 	background-color:#d1fde9;
-	
+
 }
 #logo span {
 	background-color:#bbe3c6;
 	font-style:italic;
-	
+
 }
 
 #logo {
@@ -144,7 +144,7 @@ body {
 	background-color:8b8878;
 	float:left;
 	width:50%;
-	min-height:300px; 	
+	min-height:300px;
 }
 
 .table-cell {
@@ -157,8 +157,44 @@ body {
 	height:100px;
 	background-color:#ffffff;
 	position: fixed;
-    display: none;
+  display: none;
 	z-index: 2;
 	background-color: rgba(244,177,66,0.5);
-	margin: 25%;
+	margin:20%;
+}
+
+#layer6,#layer7,#layer8{
+	position:absolute;
+	width: 100 px;
+	height: 100 px;
+	margin-top:20%;
+}
+.anim_8{
+	-webkit-animation-duration: 1.5s;
+	-webkit-animation-iteration-count:infinite;
+	-webkit-transform-origin:50px 50px;
+	-webkit-animation-name:animation_6;
+	-webkit-animation-timing-function: linear;
+-moz-animation-timing-function: linear;
+-moz-animation-duration: 1.5s;
+-moz-animation-name: animation_6;
+ -moz-transform-origin:50px 50px;
+ -moz-animation-iteration-count:infinite ;
+-o-animation-timing-function: linear;
+ -o-animation-duration: 1.5s;
+ -o-animation-name: animation_6;
+ -o-transform-origin:50px 50px;
+  -o-animation-iteration-count:infinite ;}
+@-webkit-keyframes animation_6{
+0%{ -webkit-transform:  rotate(0deg)  ;}
+100%{ -webkit-transform:  rotate(360deg)  ;}
+}
+@-o-keyframes animation_6{
+0%{ -o-transform:  rotate(0deg)  ;}
+100%{ -o-transform:  rotate(360deg)  ;}
+}
+
+@-moz-keyframes animation_6{
+0%{ -moz-transform:  rotate(0deg)  ;}
+100%{ -moz-transform:  rotate(360deg)  ;}
 }

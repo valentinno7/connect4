@@ -105,6 +105,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 	
 	function showResults2() {
+		
 		const url = "http://twserver.alunos.dcc.fc.up.pt:8008/ranking";
 		var data = JSON.stringify({"size": { "rows": Number(document.getElementById('rows').value), "columns": Number(document.getElementById('columns').value)}});
 		console.log(data);
